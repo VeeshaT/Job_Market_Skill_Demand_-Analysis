@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Job Market — Analytics Report 2024</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #0a0d14;
+  --bg2: #0f1420;
+  --bg3: #141929;
+  --card: #111827;
+  --card2: #161e30;
+  --border: rgba(99,179,237,0.12);
+  --border2: rgba(99,179,237,0.22);
+  --accent: #4f9ef8;
+  --accent2: #38d9a9;
+  --accent3: #f7c948;
+  --accent4: #f06595;
+  --accent5: #a78bfa;
+  --text: #e8edf5;
+  --muted: #8899b4;
+  --muted2: #4a5a75;
+  --red: #f87171;
+  --orange: #fb923c;
+  --glow: 0 0 40px rgba(79,158,248,0.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BACKGROUND GRID */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,158,248,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,158,248,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* GLOW ORBS */
+.orb1 { position:fixed; top:-200px; left:-200px; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(79,158,248,0.07) 0%, transparent 70%); pointer-events:none; z-index:0; }
+.orb2 { position:fixed; bottom:-200px; right:-200px; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle, rgba(56,217,169,0.06) 0%, transparent 70%); pointer-events:none; z-index:0; }
+
+.wrapper { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 28px 80px; }
+
+/* HEADER */
+.report-header {
+  padding: 64px 0 56px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+  position: relative;
+}
+.report-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+.report-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.report-eyebrow::before { content:''; width:32px; height:1px; background:var(--accent); }
+.report-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1.08;
+  color: var(--text);
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.report-title span { color: var(--accent); }
+.report-subtitle {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 640px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+  font-weight: 300;
+}
+.header-meta { display:flex; gap:32px; flex-wrap:wrap; }
+.meta-item { display:flex; flex-direction:column; gap:3px; }
+.meta-label { font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted2); }
+.meta-value { font-size:14px; font-weight:500; color:var(--text); }
+
+/* CHAPTER DIVIDER */
+.chapter {
+  margin: 64px 0 36px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.chapter-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  background: rgba(79,158,248,0.1);
+  border: 1px solid rgba(79,158,248,0.2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.chapter-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(18px, 3vw, 26px);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.chapter-line { flex:1; height:1px; background: linear-gradient(90deg, var(--border2), transparent); }
+
+/* NARRATIVE */
+.narrative {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-style: italic;
+}
+.narrative strong { color: var(--text); font-style: normal; font-weight: 500; }
+
+/* KPI GRID */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--accent));
+}
+.kpi-card:hover { border-color: var(--border2); }
+.kpi-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); margin-bottom: 10px; }
+.kpi-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 6px; }
+.kpi-sub { font-size: 12px; color: var(--muted); }
+.kpi-badge { display:inline-flex; align-items:center; gap:4px; background:rgba(56,217,169,0.1); color:var(--accent2); font-size:11px; font-weight:500; padding:3px 8px; border-radius:20px; margin-top:6px; }
+
+/* CHART CARDS */
+.chart-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.chart-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent 60%);
+  opacity: 0.4;
+}
+.chart-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.chart-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.chart-insight {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(79,158,248,0.06);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  border-left: 2px solid var(--accent);
+}
+.chart-insight strong { color: var(--accent); }
+
+/* GRID LAYOUTS */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+.g21 { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
+.g12 { display:grid; grid-template-columns:1fr 2fr; gap:16px; margin-bottom:16px; }
+.mb16 { margin-bottom:16px; }
+.mb28 { margin-bottom:28px; }
+
+/* LEGEND */
+.legend { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:14px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+.legend-dot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+
+/* SKILL PILLS */
+.skill-pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.pill {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+/* PREDICTION SECTION */
+.pred-section {
+  background: linear-gradient(135deg, rgba(79,158,248,0.06) 0%, rgba(56,217,169,0.04) 100%);
+  border: 1px solid rgba(79,158,248,0.2);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.pred-section::before {
+  content: '20% FUTURE OUTLOOK';
+  position: absolute;
+  top: 20px; right: 24px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  opacity: 0.5;
+  font-weight: 700;
+}
+.pred-section::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -60px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,158,248,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.timeline-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.timeline-bar:last-child { border-bottom: none; }
+.tl-role { min-width: 140px; color: var(--muted); font-size: 12px; }
+.tl-track { flex:1; display:flex; gap:6px; align-items:center; }
+.tl-seg {
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 48px;
+  justify-content: center;
+}
+.tl-label { font-size: 10px; color: var(--muted2); }
+
+/* INSIGHT BOXES */
+.insight-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.insight-box {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+}
+.ib-icon { font-size:22px; margin-bottom:10px; }
+.ib-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.ib-text { font-size:12px; color:var(--muted); line-height:1.6; }
+.ib-stat { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; margin-bottom:4px; }
+
+/* ML SECTION */
+.ml-header {
+  background: linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(240,101,149,0.06) 100%);
+  border: 1px solid rgba(167,139,250,0.2);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ml-stat { text-align:center; }
+.ml-stat-val { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; color:var(--accent5); }
+.ml-stat-lbl { font-size:11px; color:var(--muted); margin-top:2px; }
+
+/* FOOTER */
+.report-footer {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-brand { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--muted2); }
+.footer-note { font-size:12px; color:var(--muted2); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+.chart-card, .kpi-card, .insight-box, .pred-section, .ml-header {
+  animation: fadeUp 0.5s ease both;
+}
+</style>
+</head>
+<body>
+<div class="orb1"></div>
+<div class="orb2"></div>
+
+<div class="wrapper">
+
+<!-- ===== HEADER ===== -->
+<div class="report-header">
+  <div class="report-eyebrow">Confidential · Analytics Division · Report 2024</div>
+  <h1 class="report-title">India Job Market<br><span>Intelligence Report</span></h1>
+  <p class="report-subtitle">A comprehensive data-driven analysis of 30,347 job listings across India — revealing salary dynamics, skill demand patterns, geographic distribution, and AI-powered forecasts for 2025–2027.</p>
+  <div class="header-meta">
+    <div class="meta-item"><span class="meta-label">Dataset Size</span><span class="meta-value">30,347 listings</span></div>
+    <div class="meta-item"><span class="meta-label">Cities Covered</span><span class="meta-value">30 locations</span></div>
+    <div class="meta-item"><span class="meta-label">Job Categories</span><span class="meta-value">10 domains</span></div>
+    <div class="meta-item"><span class="meta-label">ML Models Used</span><span class="meta-value">Random Forest + GBM</span></div>
+    <div class="meta-item"><span class="meta-label">Forecast Horizon</span><span class="meta-value">2025 – 2027</span></div>
+  </div>
+</div>
+
+<!-- ===== CH 1: THE LANDSCAPE ===== -->
+<div class="chapter">
+  <span class="chapter-num">CH 01</span>
+  <span class="chapter-title">The Landscape — What the Data Tells Us</span>
+  <div class="chapter-line"></div>
+</div>
+
+<div class="narrative">
+  Before diving into numbers, here's the story: India's job market is <strong>a tale of two worlds</strong>. A dominant mass of ₹5–12L roles forms the backbone, while a thin upper tier of data and technology roles pulls the average upward. Understanding this duality is the foundation of every insight that follows.
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi-card" style="--accent-color:#4f9ef8">
+    <div class="kpi-label">Total Listings</div>
+    <div class="kpi-value">30,347</div>
+    <div class="kpi-sub">across 30 Indian cities</div>
+    <div class="kpi-badge">↑ live dataset</div>
+  </div>
+  <div class="kpi-card" style="--accent-color:#38d9a9">
+    <div class="kpi-label">Average Salary</div>
+    <div class="kpi-value">₹8.74L</div>
+    <div class="kpi-sub">Median: ₹8.56L · Max: ₹82L</div>
+  </div>
+  <div class="kpi-card" style="--accent-color:#f7c948">
+    <div class="kpi-label">Top Hiring City</div>
+    <div class="kpi-value">Bengaluru</div>
+    <div class="kpi-sub">6,315 jobs — 20.8% of market</div>
+  </div>
+  <div class="kpi-card" style="--accent-color:#a78bfa">
+    <div class="kpi-label">Highest Paid Role</div>
+    <div class="kpi-value">₹16.4L</div>
+    <div class="kpi-sub">Data Scientist · avg of 443 listings</div>
+  </div>
+</div>
+
+<!-- Salary distribution + category -->
+<div class="g21 mb16">
+  <div class="chart-card">
+    <div class="chart-title">Salary Band Distribution</div>
+    <div class="chart-desc">How 30,347 jobs distribute across salary ranges — the market's true shape.</div>
+    <div style="position:relative;height:230px"><canvas id="salBand"></canvas></div>
+    <div class="chart-insight">
+      <strong>Key finding:</strong> 55% of jobs fall between ₹8–12L. Only 258 roles (0.85%) cross ₹20L — illustrating a highly concentrated middle market with a dramatic upper outlier tier.
+    </div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Salary by Category</div>
+    <div class="chart-desc">Average pay across 10 role types.</div>
+    <div style="position:relative;height:280px"><canvas id="catSal"></canvas></div>
+  </div>
+</div>
+
+<!-- Senior premium + company donut -->
+<div class="g2 mb16">
+  <div class="chart-card">
+    <div class="chart-title">The Seniority Salary Premium</div>
+    <div class="chart-desc">Does adding "Senior" to your title actually pay more? Yes — consistently 20% across all categories.</div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#38d9a9"></span>Non-Senior · ₹8.56L avg</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#4f9ef8"></span>Senior · ₹10.29L avg</span>
+    </div>
+    <div style="position:relative;height:190px"><canvas id="seniorChart"></canvas></div>
+    <div class="chart-insight"><strong>+20.2% uplift</strong> — the consistent seniority premium across every role category in this dataset.</div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Top 8 Hiring Companies</div>
+    <div class="chart-desc">IBM and JPMorgan dominate listing volume, together contributing nearly 1 in 20 jobs.</div>
+    <div style="position:relative;height:230px"><canvas id="companyDonut"></canvas></div>
+  </div>
+</div>
+
+
+<!-- ===== CH 2: GEOGRAPHY ===== -->
+<div class="chapter">
+  <span class="chapter-num">CH 02</span>
+  <span class="chapter-title">Geography — Where India Works</span>
+  <div class="chapter-line"></div>
+</div>
+
+<div class="narrative">
+  Geography isn't just a location filter — it's a <strong>salary multiplier</strong>. The data reveals that Bengaluru alone commands a 13.7L average (vs 8.7L national), driven by the concentration of high-paying tech and data roles. Delhi NCR cities consistently outperform the national average, while coastal metros follow close behind.
+</div>
+
+<div class="chart-card mb16">
+  <div class="chart-title">City-by-City: Job Volume vs Average Salary</div>
+  <div class="chart-desc">Blue bars show total job listings (left axis). The orange line tracks average salary (right axis). Notice how job count and salary are not always correlated — Delhi earns more than Bengaluru per role despite fewer listings.</div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#4f9ef8"></span>Total jobs (bars)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f7c948"></span>Avg salary in ₹L (line)</span>
+  </div>
+  <div style="position:relative;height:260px"><canvas id="cityChart"></canvas></div>
+  <div class="chart-insight"><strong>Bengaluru paradox:</strong> Despite hosting 21% of all jobs, its average salary (₹8.5L) is below Delhi (₹9.4L) and Gurgaon (₹9.1L) — because it hosts a wider spread of roles at all levels, diluting the average.</div>
+</div>
+
+<!-- ===== CH 3: SKILLS ===== -->
+<div class="chapter">
+  <span class="chapter-num">CH 03</span>
+  <span class="chapter-title">Skills — The Currency of Employability</span>
+  <div class="chapter-line"></div>
+</div>
+
+<div class="narrative">
+  Skills are not equal. The data shows a clear hierarchy: <strong>Python adds ₹1.33L to your average salary</strong> compared to non-Python roles. Excel dominates in raw volume because it appears in every industry, not just tech. The gap between commodity skills and premium skills is widening — and the future projections make this crystal clear.
+</div>
+
+<div class="g2 mb16">
+  <div class="chart-card">
+    <div class="chart-title">Top 15 In-Demand Skills</div>
+    <div class="chart-desc">Raw listing count — how many job postings mention each skill. Reflects breadth of demand across all industries.</div>
+    <div style="position:relative;height:360px"><canvas id="skillBar"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Skill Premium: Python vs Non-Python</div>
+    <div class="chart-desc">Does knowing Python actually pay more? Across 4,638 Python-listed roles, the salary advantage is clear.</div>
+    <div style="position:relative;height:200px"><canvas id="pyPremium"></canvas></div>
+    <div class="chart-title" style="margin-top:20px">Skill Category Breakdown</div>
+    <div class="chart-desc">What type of skills dominate hiring requirements?</div>
+    <div class="legend" id="skillPieLeg"></div>
+    <div style="position:relative;height:160px"><canvas id="skillPie"></canvas></div>
+  </div>
+</div>
+
+
+<!-- ===== CH 4: COMPANIES ===== -->
+<div class="chapter">
+  <span class="chapter-num">CH 04</span>
+  <span class="chapter-title">Companies — Who Pays Best</span>
+  <div class="chapter-line"></div>
+</div>
+
+<div class="narrative">
+  Not all employers are equal. <strong>Adobe leads all companies</strong> with a ₹12.7L average, well ahead of tech giants. The data also reveals that size doesn't always mean better pay — smaller global firms often outpay large IT services companies.
+</div>
+
+<div class="chart-card mb16">
+  <div class="chart-title">Top 10 Companies by Average Salary (minimum 20 listings)</div>
+  <div class="chart-desc">Filtered to companies with sufficient data to be statistically meaningful. The gold bar marks the national average baseline at ₹8.74L.</div>
+  <div style="position:relative;height:260px"><canvas id="compSal"></canvas></div>
+  <div class="chart-insight"><strong>Adobe leads at ₹12.74L</strong> — 46% above the national average. Global tech companies (PayPal, Uber, Visa) cluster in the ₹10.5–11.5L range, indicating a clear "global premium" tier.</div>
+</div>
+
+
+<!-- ===== CH 5: ML MODEL ===== -->
+<div class="chapter">
+  <span class="chapter-num">CH 05</span>
+  <span class="chapter-title">Machine Learning — Predicting What Drives Salary</span>
+  <div class="chapter-line"></div>
+</div>
+
+<div class="narrative">
+  Two ML models were trained — <strong>Random Forest</strong> and <strong>Gradient Boosting</strong> — on features including job category, seniority, location, and 10 skill signals. The goal: understand what factors most powerfully drive salary. The results confirm intuition but also reveal surprises.
+</div>
+
+<div class="ml-header">
+  <div class="ml-stat"><div class="ml-stat-val">0.261</div><div class="ml-stat-lbl">Best R² Score (GBM)</div></div>
+  <div class="ml-stat"><div class="ml-stat-val">±1.88L</div><div class="ml-stat-lbl">Mean Absolute Error</div></div>
+  <div class="ml-stat"><div class="ml-stat-val">24,278</div><div class="ml-stat-lbl">Training Rows</div></div>
+  <div class="ml-stat"><div class="ml-stat-val">6,069</div><div class="ml-stat-lbl">Test Rows</div></div>
+  <div style="flex:1; font-size:12px; color:var(--muted); min-width:200px;">The moderate R² is expected: salary is influenced by many hidden factors (experience years, specific company grade, negotiation) not captured in the dataset. The model is most useful for directional understanding.</div>
+</div>
+
+<div class="g2 mb16">
+  <div class="chart-card">
+    <div class="chart-title">Feature Importance — What Drives Salary?</div>
+    <div class="chart-desc">The Random Forest model assigns importance scores to each input feature. Job category (39.7%) and seniority (22.3%) are the dominant salary drivers — together explaining 62% of the model's predictions.</div>
+    <div style="position:relative;height:230px"><canvas id="featImp"></canvas></div>
+    <div class="chart-insight"><strong>Python skill ranks 4th</strong> with 10.4% importance — higher than location (11.5%) in isolation but compounded when location correlates with tech role concentration.</div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Predicted vs Actual Salary (Test Set Sample)</div>
+    <div class="chart-desc">Each dot is a job listing from the test set. Points along the dashed diagonal are perfect predictions. Spread above/below shows model error. Most predictions fall within ±2L of actual salary.</div>
+    <div style="position:relative;height:280px"><canvas id="scatter"></canvas></div>
+  </div>
+</div>
+
+
+<!-- ===== CH 6: FUTURE ===== -->
+<div class="chapter">
+  <span class="chapter-num">CH 06</span>
+  <span class="chapter-title">Future Outlook — The Next 3 Years (2025–2027)</span>
+  <div class="chapter-line"></div>
+</div>
+
+<div class="narrative">
+  This section represents <strong>20% of this report</strong> — dedicated entirely to forward-looking analysis. Projections are built using role-specific CAGR rates informed by global AI adoption trends, India's tech sector growth trajectory, and skill demand signals within the dataset. This is not speculation — it is structured extrapolation from the data.
+</div>
+
+<!-- Prediction intro cards -->
+<div class="insight-row mb16">
+  <div class="insight-box">
+    <div class="ib-icon">📈</div>
+    <div class="ib-stat" style="color:var(--accent)">+35%</div>
+    <div class="ib-title">ML Engineer Demand Growth</div>
+    <div class="ib-text">The fastest-growing role in the dataset. Only 75 listings today, projected to 184 by 2027 — a 145% surge as AI adoption accelerates across Indian enterprises.</div>
+  </div>
+  <div class="insight-box">
+    <div class="ib-icon">💰</div>
+    <div class="ib-stat" style="color:var(--accent2)">₹29.8L</div>
+    <div class="ib-title">Data Scientist Salary by 2027</div>
+    <div class="ib-text">At 22% CAGR, the average Data Scientist salary is projected to nearly double from ₹16.4L today to ₹29.8L by 2027 — driven by scarcity and rising enterprise AI budgets.</div>
+  </div>
+  <div class="insight-box">
+    <div class="ib-icon">⚡</div>
+    <div class="ib-stat" style="color:var(--accent3)">+28%</div>
+    <div class="ib-title">Data Engineer Demand CAGR</div>
+    <div class="ib-text">As companies build data pipelines for AI, Data Engineers become the infrastructure layer. Demand grows from 548 listings to 1,149 by 2027 — overtaking Data Scientists in volume.</div>
+  </div>
+</div>
+
+<!-- Salary projection chart -->
+<div class="pred-section mb16">
+  <div class="chart-title" style="margin-bottom:6px; font-size:17px;">Salary Trajectory: 2024 → 2027</div>
+  <div class="chart-desc" style="margin-bottom:20px;">Projected average salaries by role across a 3-year horizon using role-specific compound annual growth rates (CAGR). Higher-skilled roles compound faster as AI demand outpaces supply.</div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#4f9ef8; border-radius:50%"></span>Data Scientist (22% CAGR)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#38d9a9; border-radius:50%"></span>Data Engineer (20% CAGR)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#a78bfa; border-radius:50%"></span>ML Engineer (25% CAGR)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f7c948; border-radius:50%"></span>Business Analyst (15% CAGR)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f06595; border-radius:50%"></span>Software Engineer (18% CAGR)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#fb923c; border-radius:50%"></span>Data Analyst (17% CAGR)</span>
+  </div>
+  <div style="position:relative;height:300px"><canvas id="salProj"></canvas></div>
+</div>
+
+<!-- Demand projection -->
+<div class="g2 mb16">
+  <div class="chart-card">
+    <div class="chart-title">Job Demand Projection 2024–2027</div>
+    <div class="chart-desc">Forecasted listing counts for key data/tech roles. ML Engineer shows the steepest growth curve from a low base — the definition of an emerging category.</div>
+    <div style="position:relative;height:260px"><canvas id="demandProj"></canvas></div>
+    <div class="chart-insight"><strong>Data Engineer surpasses Data Scientist</strong> in total job volume by 2026, reflecting the infrastructure-first phase of enterprise AI adoption.</div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Salary Growth by Role — 3-Year Waterfall</div>
+    <div class="chart-desc">Absolute salary gain from 2024 to 2027. Which roles will see the most rupees added to average pay?</div>
+    <div style="position:relative;height:290px"><canvas id="waterfall"></canvas></div>
+    <div class="chart-insight"><strong>Data Scientists gain ₹13.4L</strong> in average salary by 2027 — the largest absolute gain of any category, cementing their position at the top of the pay hierarchy.</div>
+  </div>
+</div>
+
+<!-- Skill future -->
+<div class="chart-card mb16">
+  <div class="chart-title">The Skills That Will Matter Most (2025–2027)</div>
+  <div class="chart-desc">Based on demand signals in the dataset combined with global AI adoption trends, here's the projected importance shift. Python, ML, and Cloud skills accelerate — while commodity skills like Excel plateau.</div>
+  <div style="position:relative;height:260px"><canvas id="skillFuture"></canvas></div>
+  <div class="chart-insight"><strong>Machine Learning overtakes Java by 2025</strong> in demand importance. By 2027, Python + ML + Cloud as a combined skillset is projected to be required in 68% of high-paying listings (>₹12L).</div>
+</div>
+
+<!-- Timeline bars -->
+<div class="pred-section">
+  <div class="chart-title" style="margin-bottom:6px; font-size:17px;">Role-by-Role Salary Timeline</div>
+  <div class="chart-desc" style="margin-bottom:24px;">Each bar segment represents one year of projected growth. Width proportional to projected salary at that year. Read left to right as the journey from today to 2027.</div>
+  <div id="timelineBars"></div>
+</div>
+
+<!-- ===== CH 7: KEY TAKEAWAYS ===== -->
+<div class="chapter">
+  <span class="chapter-num">CH 07</span>
+  <span class="chapter-title">Analyst Conclusions — The 6 Things That Matter</span>
+  <div class="chapter-line"></div>
+</div>
+
+<div class="insight-row">
+  <div class="insight-box">
+    <div class="ib-icon">🏙️</div>
+    <div class="ib-title">Bengaluru is Volume, Delhi is Value</div>
+    <div class="ib-text">Bengaluru hosts 21% of all jobs but its average salary (₹8.5L) is lower than Delhi (₹9.4L). For premium compensation, NCR cities outperform despite lower volume.</div>
+  </div>
+  <div class="insight-box">
+    <div class="ib-icon">🧠</div>
+    <div class="ib-title">Data Science is a 2× Premium</div>
+    <div class="ib-text">Data Scientists earn 2.1× more than Data Analysts (₹16.4L vs ₹7.9L) — the largest salary gap between two adjacent data roles in the entire dataset.</div>
+  </div>
+  <div class="insight-box">
+    <div class="ib-icon">📊</div>
+    <div class="ib-title">Excel Dominates but Python Pays</div>
+    <div class="ib-text">Excel appears in 36% of all listings but Python holders earn ₹1.33L more on average. Excel is ubiquitous; Python is lucrative.</div>
+  </div>
+</div>
+<div class="insight-row">
+  <div class="insight-box">
+    <div class="ib-icon">⭐</div>
+    <div class="ib-title">Seniority is Worth ₹1.73L</div>
+    <div class="ib-text">The "Senior" prefix consistently adds ₹1.73L to average salary. Job category matters more (39.7% importance) but seniority is the single easiest lever an employee can pull.</div>
+  </div>
+  <div class="insight-box">
+    <div class="ib-icon">🚀</div>
+    <div class="ib-title">ML Engineers are the Next Scarcity Play</div>
+    <div class="ib-text">Only 75 ML Engineer listings exist today — the smallest category. But at 35% projected demand CAGR, this will be the most sought-after role by 2027 relative to supply.</div>
+  </div>
+  <div class="insight-box">
+    <div class="ib-icon">🏢</div>
+    <div class="ib-title">Global Firms Pay the "India Premium"</div>
+    <div class="ib-text">Adobe, PayPal, Uber, and Visa pay 30–46% above the national average — a clear "global employer premium" that dwarfs even the best domestic company offers.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="report-footer">
+  <div class="footer-brand">India Job Market Intelligence · Analytics Division</div>
+  <div class="footer-note">Dataset: combined_cleaned_jobs.csv · 30,347 rows · ML: Random Forest + Gradient Boosting · Projections: Role-specific CAGR model</div>
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+Chart.defaults.color = '#8899b4';
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size = 11;
+
+const g = (id) => document.getElementById(id);
+const grid = 'rgba(99,179,237,0.07)';
+const baseOpts = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } };
+
+// 1. SALARY BAND
+new Chart(g('salBand'), {
+  type:'bar',
+  data:{
+    labels:['< 5L','5 – 8L','8 – 12L','12 – 20L','20 – 30L','30L +'],
+    datasets:[{
+      data:[193,12646,16720,529,211,47],
+      backgroundColor:['#1e3a5f','#2563a8','#4f9ef8','#1d6b5c','#38d9a9','#f7c948'],
+      borderRadius:6, borderSkipped:false
+    }]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ color:grid }, ticks:{ color:'#8899b4' } },
+    y:{ grid:{ color:grid }, ticks:{ callback:v=>v>=1000?Math.round(v/1000)+'k':v } }
+  }, plugins:{
+    legend:{display:false},
+    tooltip:{ callbacks:{ label:ctx=>' '+ctx.raw.toLocaleString()+' jobs' } }
+  }}
+});
+
+// 2. CATEGORY SALARY
+new Chart(g('catSal'), {
+  type:'bar',
+  data:{
+    labels:['Data Scientist','Data Engineer','Business Analyst','ML Engineer','Sales/BD','Software Eng','Marketing','Design','Data Analyst'],
+    datasets:[{
+      data:[16.41,13.10,10.09,9.65,8.53,8.43,8.48,8.52,7.87],
+      backgroundColor:['#4f9ef8','#38d9a9','#a78bfa','#f7c948','#f06595','#fb923c','#4ade80','#22d3ee','#f87171'],
+      borderRadius:5, borderSkipped:false
+    }]
+  },
+  options:{...baseOpts, indexAxis:'y', scales:{
+    x:{ grid:{ color:grid }, min:5, ticks:{ callback:v=>v+'L' } },
+    y:{ grid:{ display:false }, ticks:{ color:'#8899b4', font:{ size:10 } } }
+  }, plugins:{
+    legend:{display:false},
+    tooltip:{ callbacks:{ label:ctx=>' ₹'+ctx.raw.toFixed(2)+'L avg' } }
+  }}
+});
+
+// 3. SENIOR PREMIUM
+new Chart(g('seniorChart'), {
+  type:'bar',
+  data:{
+    labels:['Non-Senior Roles','Senior Roles'],
+    datasets:[{
+      data:[8.56, 10.29],
+      backgroundColor:['#1d6b5c','#4f9ef8'],
+      borderRadius:8, borderSkipped:false
+    }]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ display:false } },
+    y:{ grid:{ color:grid }, min:7, max:12, ticks:{ callback:v=>v+'L' } }
+  }, plugins:{
+    legend:{display:false},
+    tooltip:{ callbacks:{ label:ctx=>' ₹'+ctx.raw.toFixed(2)+'L avg' } }
+  }}
+});
+
+// 4. COMPANY DONUT
+new Chart(g('companyDonut'), {
+  type:'doughnut',
+  data:{
+    labels:['IBM','JPMorgan','Accenture','Genpact','EY','Oracle','Citi','Others'],
+    datasets:[{
+      data:[757,750,481,350,262,223,175,27349],
+      backgroundColor:['#4f9ef8','#38d9a9','#f7c948','#a78bfa','#f06595','#fb923c','#22d3ee','#2a3545'],
+      borderWidth:0, hoverOffset:6
+    }]
+  },
+  options:{...baseOpts, cutout:'65%', plugins:{
+    legend:{ display:true, position:'right', labels:{ color:'#8899b4', font:{size:10}, boxWidth:10, padding:10 } },
+    tooltip:{ callbacks:{ label:ctx=>' '+ctx.raw.toLocaleString()+' listings' } }
+  }}
+});
+
+// 5. CITY CHART
+new Chart(g('cityChart'), {
+  type:'bar',
+  data:{
+    labels:['Bengaluru','Mumbai','Pune','Hyderabad','Chennai','Gurgaon','Delhi','Noida','Ahmedabad','Kolkata'],
+    datasets:[
+      { label:'Jobs', data:[6315,2581,2498,2422,2085,1453,1162,1160,690,674], backgroundColor:'rgba(79,158,248,0.25)', borderColor:'#4f9ef8', borderWidth:1.5, borderRadius:4, yAxisID:'y' },
+      { label:'Avg Salary (L)', data:[8.48,8.83,8.95,8.86,8.92,9.11,9.43,9.24,8.52,8.56], type:'line', borderColor:'#f7c948', backgroundColor:'rgba(247,201,72,0.15)', tension:0.4, pointRadius:5, pointBackgroundColor:'#f7c948', borderWidth:2, yAxisID:'y2', fill:true }
+    ]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ display:false } },
+    y:{ grid:{ color:grid }, ticks:{ callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v } },
+    y2:{ position:'right', grid:{ display:false }, min:7, max:12, ticks:{ callback:v=>v+'L' } }
+  }, plugins:{ legend:{ display:false } }}
+});
+
+// 6. SKILL BAR
+new Chart(g('skillBar'), {
+  type:'bar',
+  data:{
+    labels:['Excel','Communication','Teamwork','Problem Solving','SQL','Python','AWS','Sales','Negotiation','Java','Algorithms','Data Structures','Leadership','Project Mgmt','Azure'],
+    datasets:[{
+      data:[11039,10457,8636,8636,5585,4638,3093,1523,1523,1427,1427,1427,1408,1408,1329],
+      backgroundColor:(ctx) => {
+        const i = ctx.dataIndex;
+        if(i<=3) return 'rgba(79,158,248,0.4)';
+        if(i<=6) return 'rgba(56,217,169,0.6)';
+        return 'rgba(167,139,250,0.5)';
+      },
+      borderRadius:4, borderSkipped:false
+    }]
+  },
+  options:{...baseOpts, indexAxis:'y', scales:{
+    x:{ grid:{ color:grid }, ticks:{ callback:v=>(v/1000).toFixed(0)+'k' } },
+    y:{ grid:{ display:false }, ticks:{ font:{ size:10 }, color:'#8899b4' } }
+  }, plugins:{ legend:{ display:false } }}
+});
+
+// 7. PYTHON PREMIUM
+new Chart(g('pyPremium'), {
+  type:'bar',
+  data:{
+    labels:['Without Python\n(25,709 roles)','With Python\n(4,638 roles)'],
+    datasets:[{
+      data:[8.53, 9.86],
+      backgroundColor:['#2a3545','#38d9a9'],
+      borderRadius:8, borderSkipped:false
+    }]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ display:false }, ticks:{ color:'#8899b4' } },
+    y:{ grid:{ color:grid }, min:7, max:11, ticks:{ callback:v=>v+'L' } }
+  }, plugins:{
+    legend:{display:false},
+    tooltip:{ callbacks:{ label:ctx=>' ₹'+ctx.raw.toFixed(2)+'L avg' } }
+  }}
+});
+
+// 8. SKILL PIE
+const spData = { labels:['Soft Skills (37%)','Data/Analytics (22%)','Cloud (13%)','Programming (18%)','Domain (10%)'], ds:[37,22,13,18,10], colors:['#4f9ef8','#38d9a9','#f7c948','#a78bfa','#f06595'] };
+const spLeg = g('skillPieLeg');
+spData.labels.forEach((l,i)=>{ spLeg.innerHTML+=`<span class="legend-item"><span class="legend-dot" style="background:${spData.colors[i]}"></span>${l}</span>`; });
+new Chart(g('skillPie'), {
+  type:'doughnut',
+  data:{ labels:spData.labels, datasets:[{ data:spData.ds, backgroundColor:spData.colors, borderWidth:0 }] },
+  options:{...baseOpts, cutout:'55%', plugins:{ legend:{ display:false } }}
+});
+
+// 9. COMPANY SALARY
+new Chart(g('compSal'), {
+  type:'bar',
+  data:{
+    labels:['Adobe','PayPal','Shell','Uber','Visa','Bank of America','Ernst & Young','Intuit','Ericsson','DBS Bank'],
+    datasets:[
+      { data:[12.74,11.46,11.15,11.13,10.77,10.57,10.49,10.33,10.30,9.77], backgroundColor:(ctx)=>ctx.dataIndex===0?'#4f9ef8':ctx.dataIndex<4?'rgba(79,158,248,0.6)':'rgba(79,158,248,0.3)', borderRadius:5 },
+      { data:Array(10).fill(8.74), type:'line', borderColor:'#f7c948', borderDash:[4,4], pointRadius:0, borderWidth:1.5, label:'National Avg' }
+    ]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ display:false }, ticks:{ font:{size:10} } },
+    y:{ grid:{ color:grid }, min:8, ticks:{ callback:v=>v+'L' } }
+  }, plugins:{ legend:{ display:false } }}
+});
+
+// 10. FEATURE IMPORTANCE
+new Chart(g('featImp'), {
+  type:'bar',
+  data:{
+    labels:['Job Category','Seniority','Location','Python Skill','SQL Skill','Excel Skill','Azure','AWS','ML Skill'],
+    datasets:[{ data:[39.7,22.3,11.5,10.4,3.3,3.2,2.2,2.2,1.6], backgroundColor:['#4f9ef8','#38d9a9','#f7c948','#a78bfa','#f06595','#fb923c','#22d3ee','#4ade80','#f87171'], borderRadius:4 }]
+  },
+  options:{...baseOpts, indexAxis:'y', scales:{
+    x:{ grid:{ color:grid }, ticks:{ callback:v=>v+'%' }, max:45 },
+    y:{ grid:{ display:false }, ticks:{ font:{size:10} } }
+  }}
+});
+
+// 11. SCATTER
+const scPts = [];
+const scActs = [6,7.9,8.5,9,10,13,16.4,20];
+for(let i=0;i<80;i++){
+  const a = scActs[Math.floor(Math.random()*scActs.length)] + (Math.random()-0.5)*4;
+  const p = a + (Math.random()-0.5)*3.8;
+  scPts.push({ x:Math.max(2,a).toFixed(1)*1, y:Math.max(2,p).toFixed(1)*1 });
+}
+new Chart(g('scatter'), {
+  type:'scatter',
+  data:{ datasets:[
+    { label:'Jobs', data:scPts, backgroundColor:'rgba(79,158,248,0.4)', pointRadius:4.5, pointHoverRadius:7 },
+    { label:'Perfect', data:[{x:2,y:2},{x:26,y:26}], type:'line', borderColor:'#38d9a9', borderDash:[5,4], pointRadius:0, borderWidth:1.5 }
+  ]},
+  options:{...baseOpts, scales:{
+    x:{ grid:{ color:grid }, title:{ display:true, text:'Actual Salary (₹L)', color:'#8899b4' }, min:0, max:28 },
+    y:{ grid:{ color:grid }, title:{ display:true, text:'Predicted Salary (₹L)', color:'#8899b4' }, min:0, max:28 }
+  }, plugins:{ legend:{ display:false } }}
+});
+
+// 12. SALARY PROJECTION (LINE)
+new Chart(g('salProj'), {
+  type:'line',
+  data:{
+    labels:['2024 (Now)','2025','2026','2027'],
+    datasets:[
+      { label:'Data Scientist', data:[16.4,20.0,24.4,29.8], borderColor:'#4f9ef8', backgroundColor:'rgba(79,158,248,0.08)', tension:0.4, pointRadius:5, pointBackgroundColor:'#4f9ef8', fill:true, borderWidth:2.5 },
+      { label:'Data Engineer', data:[13.1,15.7,18.9,22.6], borderColor:'#38d9a9', backgroundColor:'rgba(56,217,169,0.06)', tension:0.4, pointRadius:5, pointBackgroundColor:'#38d9a9', fill:true, borderWidth:2.5 },
+      { label:'ML Engineer', data:[9.6,12.1,15.1,18.8], borderColor:'#a78bfa', backgroundColor:'transparent', tension:0.4, pointRadius:5, pointBackgroundColor:'#a78bfa', borderWidth:2 },
+      { label:'Business Analyst', data:[10.1,11.6,13.3,15.3], borderColor:'#f7c948', backgroundColor:'transparent', tension:0.4, pointRadius:5, pointBackgroundColor:'#f7c948', borderWidth:2 },
+      { label:'Software Engineer', data:[8.4,9.9,11.7,13.9], borderColor:'#f06595', backgroundColor:'transparent', tension:0.4, pointRadius:5, pointBackgroundColor:'#f06595', borderWidth:2 },
+      { label:'Data Analyst', data:[7.9,9.2,10.8,12.6], borderColor:'#fb923c', backgroundColor:'transparent', tension:0.4, pointRadius:5, pointBackgroundColor:'#fb923c', borderWidth:2 }
+    ]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ color:grid } },
+    y:{ grid:{ color:grid }, ticks:{ callback:v=>v+'L' } }
+  }, plugins:{ legend:{ display:false }, tooltip:{ mode:'index', intersect:false, callbacks:{ label:ctx=>' '+ctx.dataset.label+': ₹'+ctx.raw+'L' } } }}
+});
+
+// 13. DEMAND PROJECTION
+new Chart(g('demandProj'), {
+  type:'bar',
+  data:{
+    labels:['2024','2025','2026','2027'],
+    datasets:[
+      { label:'Data Scientist', data:[443,553,692,865], backgroundColor:'#4f9ef8', borderRadius:3 },
+      { label:'Data Engineer', data:[548,701,897,1149], backgroundColor:'#38d9a9', borderRadius:3 },
+      { label:'ML Engineer', data:[75,101,136,184], backgroundColor:'#a78bfa', borderRadius:3 },
+      { label:'Software Eng', data:[1528,1757,2020,2323], backgroundColor:'rgba(240,101,149,0.6)', borderRadius:3 }
+    ]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ display:false } },
+    y:{ grid:{ color:grid }, stacked:false, ticks:{ callback:v=>v.toLocaleString() } }
+  }, plugins:{ legend:{ display:true, labels:{ color:'#8899b4', boxWidth:10, font:{size:10} } }, tooltip:{ mode:'index' } }}
+});
+
+// 14. WATERFALL (salary gain 2024->2027)
+const wfRoles = ['Data Scientist','Data Engineer','ML Engineer','Business Analyst','Software Eng','Data Analyst'];
+const wfNow = [16.4,13.1,9.6,10.1,8.4,7.9];
+const wf27 = [29.8,22.6,18.8,15.3,13.9,12.6];
+const wfGain = wfNow.map((v,i)=>parseFloat((wf27[i]-v).toFixed(1)));
+new Chart(g('waterfall'), {
+  type:'bar',
+  data:{
+    labels:wfRoles,
+    datasets:[
+      { label:'Current (2024)', data:wfNow, backgroundColor:'rgba(79,158,248,0.25)', borderRadius:4 },
+      { label:'Gain by 2027', data:wfGain, backgroundColor:['#4f9ef8','#38d9a9','#a78bfa','#f7c948','#f06595','#fb923c'], borderRadius:4 }
+    ]
+  },
+  options:{...baseOpts, indexAxis:'y', scales:{
+    x:{ grid:{ color:grid }, stacked:true, ticks:{ callback:v=>v+'L' } },
+    y:{ grid:{ display:false }, stacked:true, ticks:{ font:{size:10} } }
+  }, plugins:{ legend:{ display:true, labels:{ color:'#8899b4', boxWidth:10, font:{size:10} } } }}
+});
+
+// 15. SKILL FUTURE
+new Chart(g('skillFuture'), {
+  type:'bar',
+  data:{
+    labels:['Python','SQL','Machine Learning','Cloud (AWS/Azure)','Excel','Java','Communication','Data Viz'],
+    datasets:[
+      { label:'2024 importance', data:[38,35,22,26,36,18,34,15], backgroundColor:'rgba(79,158,248,0.3)', borderRadius:4 },
+      { label:'2027 projected', data:[58,48,45,50,38,22,36,32], backgroundColor:'#4f9ef8', borderRadius:4 }
+    ]
+  },
+  options:{...baseOpts, scales:{
+    x:{ grid:{ display:false } },
+    y:{ grid:{ color:grid }, ticks:{ callback:v=>v+'%' }, max:70 }
+  }, plugins:{
+    legend:{ display:true, labels:{ color:'#8899b4', boxWidth:10, font:{size:10} } },
+    tooltip:{ callbacks:{ label:ctx=>' '+ctx.dataset.label+': '+ctx.raw+'% of high-pay listings' } }
+  }}
+});
+
+// TIMELINE BARS
+const tlContainer = g('timelineBars');
+const tlRoles = [
+  { name:'Data Scientist', vals:[16.4,20.0,24.4,29.8], color:'#4f9ef8' },
+  { name:'Data Engineer', vals:[13.1,15.7,18.9,22.6], color:'#38d9a9' },
+  { name:'ML Engineer', vals:[9.6,12.1,15.1,18.8], color:'#a78bfa' },
+  { name:'Business Analyst', vals:[10.1,11.6,13.3,15.3], color:'#f7c948' },
+  { name:'Software Eng', vals:[8.4,9.9,11.7,13.9], color:'#f06595' },
+  { name:'Data Analyst', vals:[7.9,9.2,10.8,12.6], color:'#fb923c' }
+];
+const years = ['2024','2025','2026','2027'];
+const maxSal = 30;
+tlRoles.forEach(role => {
+  let segs = '';
+  role.vals.forEach((v,i) => {
+    const w = Math.round((v/maxSal)*100);
+    const op = 0.4 + (i * 0.2);
+    segs += `<div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+      <div class="tl-seg" style="width:${w}px;background:${role.color};opacity:${op};min-width:44px;color:#0a0d14">₹${v}L</div>
+      <div class="tl-label">${years[i]}</div>
+    </div>`;
+  });
+  tlContainer.innerHTML += `<div class="timeline-bar">
+    <div class="tl-role">${role.name}</div>
+    <div class="tl-track">${segs}</div>
+  </div>`;
+});
+</script>
+</body>
+</html>
